@@ -20,9 +20,9 @@
 #ifndef MetaString_h
 #define MetaString_h
 
-#include "Inline.h"
-#include "Indexes.h"
-#include "MetaRandom.h"
+#include "Inline.hpp"
+#include "Indexes.hpp"
+#include "MetaRandom.hpp"
 #include "Log.h"
 
 namespace andrivet { namespace ADVobfuscator {
@@ -48,14 +48,14 @@ namespace andrivet { namespace ADVobfuscator {
       for(size_t i = 0; i < sizeof...(I); ++i)
         buffer_[i] = decrypt(buffer_[i]);
       buffer_[sizeof...(I)] = 0;
-      LOG("--- Implementation #" << 0 << " with key 0x" << hex(key_));
+      LOGD( "--- Implementation #0 with key 0x%x", key_ );
       return const_cast<const char*>(buffer_);
     }
 
   private:
     // Encrypt / decrypt a character of the original string with the key
-    constexpr char key() const { return key_; }
-    constexpr char ALWAYS_INLINE encrypt(char c, int k) const { return c ^ k; }
+    constexpr char key() const { return static_cast< char >( key_ ); }
+    constexpr char ALWAYS_INLINE encrypt(char c, int k) const { return static_cast< char >( c ^ k ); }
     constexpr char decrypt(char c) const { return encrypt(c, key()); }
 
     volatile int key_; // key. "volatile" is important to avoid uncontrolled over-optimization by the compiler
@@ -78,7 +78,7 @@ namespace andrivet { namespace ADVobfuscator {
       for(size_t i = 0; i < sizeof...(I); ++i)
         buffer_[i] = decrypt(buffer_[i], i);
       buffer_[sizeof...(I)] = 0;
-      LOG("--- Implementation #" << 1 << " with key 0x" << hex(key_));
+      LOGD( "--- Implementation #1 with key 0x%x", key_ );
       return const_cast<const char*>(buffer_);
     }
 
@@ -107,7 +107,7 @@ namespace andrivet { namespace ADVobfuscator {
     {
       for(size_t i = 0; i < sizeof...(I); ++i)
         buffer_[i] = decrypt(buffer_[i]);
-      LOG("--- Implementation #" << 2 << " with key 0x" << hex(K));
+      LOGD( "--- Implementation #2 with key 0x%x", K);
       return const_cast<const char*>(buffer_);
     }
 
@@ -115,8 +115,8 @@ namespace andrivet { namespace ADVobfuscator {
     // Encrypt / decrypt a character of the original string with the key
     // Be sure that the encryption key is never 0.
     constexpr char key(char key) const { return 1 + (key % 13); }
-    constexpr char ALWAYS_INLINE encrypt(char c) const { return c + key(K); }
-    constexpr char decrypt(char c) const { return c - key(K); }
+    constexpr char ALWAYS_INLINE encrypt(char c) const { return static_cast< char >( c + key(K) ); }
+    constexpr char decrypt(char c) const { return static_cast< char >( c - key(K) ); }
 
     // Buffer to store the encrypted string + terminating null byte. Key is not stored
     volatile char buffer_[sizeof...(I) + 1];
@@ -126,16 +126,37 @@ namespace andrivet { namespace ADVobfuscator {
   template<int N>
   struct MetaRandomChar
   {
+#ifndef __EMSCRIPTEN__
     // Use 0x7F as maximum value since most of the time, char is signed (we have however 1 bit less of randomness)
     static const char value = static_cast<char>(1 + MetaRandom<N, 0x7F - 1>::value);
+#else
+private:
+    static constexpr char validate( char val )
+    {
+        return val == '\"' ? val + 1 : val;
+    }
+public:
+    // workaround for emscripten bug caused by '\"' in type name
+    // TODO: test this with upstream backend, instead of fastcomp
+    static const char value = validate( static_cast<char>(1 + MetaRandom<N, 0x7F - 1>::value) );
+#endif
   };
 
 
 }}
 
+#ifdef MB_DISABLE_OBFUSCATION
+
+#define DEF_OBFUSCATED( str ) str
+#define OBFUSCATED( str ) str
+
+#else
+
 // Prefix notation
-#define DEF_OBFUSCATED(str) MetaString<andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 3>::value, andrivet::ADVobfuscator::MetaRandomChar<__COUNTER__>::value, Make_Indexes<sizeof(str) - 1>::type>(str)
+#define DEF_OBFUSCATED(str) andrivet::ADVobfuscator::MetaString<andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 3>::value, andrivet::ADVobfuscator::MetaRandomChar<__COUNTER__>::value, andrivet::ADVobfuscator::Make_Indexes<sizeof(str) - 1>::type>(str)
 
 #define OBFUSCATED(str) (DEF_OBFUSCATED(str).decrypt())
+
+#endif
 
 #endif
