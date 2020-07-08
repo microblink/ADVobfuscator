@@ -24,8 +24,6 @@
 #include "Indexes.hpp"
 #include "MetaRandom.hpp"
 
-#include <Log.h>
-
 namespace andrivet { namespace ADVobfuscator {
 
   // Represents an obfuscated string, parametrized with an alrorithm number N, a list of indexes Indexes and a key Key
@@ -49,7 +47,6 @@ namespace andrivet { namespace ADVobfuscator {
       for(size_t i = 0; i < sizeof...(I); ++i)
         buffer_[i] = decrypt(buffer_[i]);
       buffer_[sizeof...(I)] = 0;
-      LOGD( "--- Implementation #0 with key 0x%x", key_ );
       return const_cast<const char*>(buffer_);
     }
 
@@ -79,7 +76,6 @@ namespace andrivet { namespace ADVobfuscator {
       for(size_t i = 0; i < sizeof...(I); ++i)
         buffer_[i] = decrypt(buffer_[i], i);
       buffer_[sizeof...(I)] = 0;
-      LOGD( "--- Implementation #1 with key 0x%x", key_ );
       return const_cast<const char*>(buffer_);
     }
 
@@ -108,7 +104,6 @@ namespace andrivet { namespace ADVobfuscator {
     {
       for(size_t i = 0; i < sizeof...(I); ++i)
         buffer_[i] = decrypt(buffer_[i]);
-      LOGD( "--- Implementation #2 with key 0x%x", K);
       return const_cast<const char*>(buffer_);
     }
 
