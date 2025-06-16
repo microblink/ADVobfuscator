@@ -133,7 +133,7 @@ namespace andrivet { namespace ADVobfuscator { namespace Machine2 {
                 // Generate a lot of transitions (at least 19, at most 19 + 2 * 40)
                 // Important: This has to be an odd number to detect if the predicate is true or not
                 // This is computed at Compile-Time
-                Unroller<19 + 2 * MetaRandom<__COUNTER__, 40>::value>{}([&]()
+                Unroller<19 + 2 * MetaRandom<__COUNTER__ % 64, 40>::value>{}([&]()
                 {
                     machine.process_event(event1{});
                     machine.process_event(event1{});
@@ -154,7 +154,7 @@ namespace andrivet { namespace ADVobfuscator { namespace Machine2 {
         R result_;
 
         // Counter to obfuscate predicate result
-        static const int predicateCounterInit_ = 100 + MetaRandom<__COUNTER__, 999>::value;
+        static const int predicateCounterInit_ = 100 + MetaRandom<__COUNTER__ % 64, 999>::value;
         int predicateCounter_ = predicateCounterInit_;
     };
 
@@ -167,11 +167,11 @@ namespace andrivet { namespace ADVobfuscator { namespace Machine2 {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
 
-#define OBFUSCATED_CALL_P0(P, f) andrivet::ADVobfuscator::ObfuscatedCallP<andrivet::ADVobfuscator::Machine2::Machine, P>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278))
-#define OBFUSCATED_CALL_RET_P0(R, P, f) andrivet::ADVobfuscator::ObfuscatedCallRetP<andrivet::ADVobfuscator::Machine2::Machine, P, R>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278))
+#define OBFUSCATED_CALL_P0(P, f) andrivet::ADVobfuscator::ObfuscatedCallP<andrivet::ADVobfuscator::Machine2::Machine, P>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__ % 64, 400>::value + 278))
+#define OBFUSCATED_CALL_RET_P0(R, P, f) andrivet::ADVobfuscator::ObfuscatedCallRetP<andrivet::ADVobfuscator::Machine2::Machine, P, R>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__ % 64, 400>::value + 278))
 
-#define OBFUSCATED_CALL_P(P, f, ...) andrivet::ADVobfuscator::ObfuscatedCallP<andrivet::ADVobfuscator::Machine2::Machine, P>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
-#define OBFUSCATED_CALL_RET_P(R, P, f, ...) andrivet::ADVobfuscator::ObfuscatedCallRetP<andrivet::ADVobfuscator::Machine2::Machine, P, R>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 400>::value + 278), ##__VA_ARGS__)
+#define OBFUSCATED_CALL_P(P, f, ...) andrivet::ADVobfuscator::ObfuscatedCallP<andrivet::ADVobfuscator::Machine2::Machine, P>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__ % 64, 400>::value + 278), ##__VA_ARGS__)
+#define OBFUSCATED_CALL_RET_P(R, P, f, ...) andrivet::ADVobfuscator::ObfuscatedCallRetP<andrivet::ADVobfuscator::Machine2::Machine, P, R>(MakeObfuscatedAddress(f, andrivet::ADVobfuscator::MetaRandom<__COUNTER__ % 64, 400>::value + 278), ##__VA_ARGS__)
 
 #pragma clang diagnostic pop
 #pragma warning(pop)

@@ -139,7 +139,7 @@ namespace andrivet { namespace ADVobfuscator {
 }}
 
 // Prefix notation
-#define DEF_OBFUSCATED4(str) MetaString4<andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 3>::value, andrivet::ADVobfuscator::MetaRandomChar4<__COUNTER__>::value, Make_Indexes<sizeof(str) - 1>::type>(str)
+#define DEF_OBFUSCATED4(str) MetaString4<andrivet::ADVobfuscator::MetaRandom<__COUNTER__ % 64, 3>::value, andrivet::ADVobfuscator::MetaRandomChar4<__COUNTER__ % 64>::value, Make_Indexes<sizeof(str) - 1>::type>(str)
 
 #define OBFUSCATED4(str) (DEF_OBFUSCATED4(str).decrypt())
 

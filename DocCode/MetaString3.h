@@ -75,7 +75,7 @@ struct MetaRandomChar3
 }}
 
 // Prefix notation
-#define OBFUSCATED3(str) (MetaString3<Make_Indexes<sizeof(str) - 1>::type, MetaRandomChar3<__COUNTER__>::value>(str).decrypt())
+#define OBFUSCATED3(str) (MetaString3<Make_Indexes<sizeof(str) - 1>::type, MetaRandomChar3<__COUNTER__ % 64>::value>(str).decrypt())
 
 // It is still possible to define operator "" but it will always use the same key for all encrypted string.
 // This is not what we want so use instead the macro ENCRYPTED3.

@@ -83,16 +83,16 @@ void SampleMetaRandom()
     // we want to generate 10 different numbers are compile-time.
     cout << "--------------------" << endl;
     cout << "Generate random numbers in range [0..10) at compile-time" << endl;
-    cout << MetaRandom<__COUNTER__, 10>::value << endl;
-    cout << MetaRandom<__COUNTER__, 10>::value << endl;
-    cout << MetaRandom<__COUNTER__, 10>::value << endl;
-    cout << MetaRandom<__COUNTER__, 10>::value << endl;
-    cout << MetaRandom<__COUNTER__, 10>::value << endl;
-    cout << MetaRandom<__COUNTER__, 10>::value << endl;
-    cout << MetaRandom<__COUNTER__, 10>::value << endl;
-    cout << MetaRandom<__COUNTER__, 10>::value << endl;
-    cout << MetaRandom<__COUNTER__, 10>::value << endl;
-    cout << MetaRandom<__COUNTER__, 10>::value << endl;
+    cout << MetaRandom<__COUNTER__ % 64, 10>::value << endl;
+    cout << MetaRandom<__COUNTER__ % 64, 10>::value << endl;
+    cout << MetaRandom<__COUNTER__ % 64, 10>::value << endl;
+    cout << MetaRandom<__COUNTER__ % 64, 10>::value << endl;
+    cout << MetaRandom<__COUNTER__ % 64, 10>::value << endl;
+    cout << MetaRandom<__COUNTER__ % 64, 10>::value << endl;
+    cout << MetaRandom<__COUNTER__ % 64, 10>::value << endl;
+    cout << MetaRandom<__COUNTER__ % 64, 10>::value << endl;
+    cout << MetaRandom<__COUNTER__ % 64, 10>::value << endl;
+    cout << MetaRandom<__COUNTER__ % 64, 10>::value << endl;
 }
 
 // Third implementation of obfuscated string

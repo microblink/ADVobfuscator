@@ -149,7 +149,7 @@ public:
 #else
 
 // Prefix notation
-#define DEF_OBFUSCATED(str) andrivet::ADVobfuscator::MetaString<andrivet::ADVobfuscator::MetaRandom<__COUNTER__, 3>::value, andrivet::ADVobfuscator::MetaRandomChar<__COUNTER__>::value, andrivet::ADVobfuscator::Make_Indexes<sizeof(str) - 1>::type>(str)
+#define DEF_OBFUSCATED(str) andrivet::ADVobfuscator::MetaString<andrivet::ADVobfuscator::MetaRandom<__COUNTER__ % 64, 3>::value, andrivet::ADVobfuscator::MetaRandomChar<__COUNTER__ % 64>::value, andrivet::ADVobfuscator::Make_Indexes<sizeof(str) - 1>::type>(str)
 
 #define OBFUSCATED(str) (DEF_OBFUSCATED(str).decrypt())
 
